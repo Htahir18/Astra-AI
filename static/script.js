@@ -1,23 +1,24 @@
-window.addEventListener("load", function () {
-    const splash = document.getElementById("splash");
-    const chat = document.getElementById("chat");
+const chatBox = document.getElementById("chat-box");
+const form = document.getElementById("chat-form");
+const typingRow = document.getElementById("typing-row");
+const input = document.getElementById("question-input");
 
-    if (!splash) return;
+function scrollToBottom() {
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-    if (sessionStorage.getItem("splashSeen") === "true") {
-        splash.style.display = "none";
-    } else {
-        sessionStorage.setItem("splashSeen", "true");
+scrollToBottom();
 
-        setTimeout(function () {
-            splash.style.opacity = "0";
+form.addEventListener("submit", function () {
+    const text = input.value.trim();
 
-            setTimeout(function () {
-                splash.style.display = "none";
-                if (chat) {
-                    chat.scrollTop = chat.scrollHeight;
-                }
-            }, 1500);
-        }, 2000);
+    if (!text) {
+        return;
     }
+
+    typingRow.classList.add("show");
+
+    setTimeout(() => {
+        scrollToBottom();
+    }, 50);
 });
