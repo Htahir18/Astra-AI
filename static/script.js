@@ -1,46 +1,24 @@
-window.addEventListener("load", () => {
-    const splashScreen = document.getElementById("splash-screen");
-    const mainApp = document.getElementById("main-app");
-    const chatBox = document.getElementById("chat-box");
-    const form = document.getElementById("chat-form");
-    const typingRow = document.getElementById("typing-row");
-    const input = document.getElementById("question-input");
+window.onload = function(){
 
-    function scrollToBottom() {
-        if (chatBox) {
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    }
+const splash = document.getElementById("splash")
 
-    const splashSeen = sessionStorage.getItem("astraSplashSeen");
+if(!sessionStorage.getItem("splashSeen")){
 
-    if (!splashSeen && splashScreen) {
-        sessionStorage.setItem("astraSplashSeen", "true");
+sessionStorage.setItem("splashSeen","true")
 
-        setTimeout(() => {
-            splashScreen.classList.add("fade-out");
+setTimeout(()=>{
+splash.style.opacity="0"
 
-            setTimeout(() => {
-                splashScreen.style.display = "none";
-                scrollToBottom();
-            }, 1600);
-        }, 2200);
-    } else {
-        if (splashScreen) {
-            splashScreen.style.display = "none";
-        }
-        scrollToBottom();
-    }
+setTimeout(()=>{
+splash.style.display="none"
+},1500)
 
-    if (form && input && typingRow) {
-        form.addEventListener("submit", function () {
-            const text = input.value.trim();
+},2000)
 
-            if (!text) {
-                return;
-            }
+}else{
 
-            typingRow.classList.add("show");
-        });
-    }
-});
+splash.style.display="none"
+
+}
+
+}
