@@ -7,61 +7,71 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="stars"></div>
-    <div class="nebula nebula-1"></div>
-    <div class="nebula nebula-2"></div>
-    <div class="nebula nebula-3"></div>
+    <div id="splash-screen">
+        <img src="{{ url_for('static', filename='images/astra-logo.png') }}" alt="Astra AI Splash" class="splash-image">
+        <div class="splash-overlay">
+            <h1 class="splash-title">Astra AI</h1>
+            <p class="splash-subtitle">Created by Hooriya Muhammad Tahir</p>
+        </div>
+    </div>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            <div class="brand">
-                <div class="logo-wrap">
-                    <img src="{{ url_for('static', filename='images/astra-logo.png') }}" alt="Astra AI Logo" class="logo">
+    <div id="main-app" class="hidden-app">
+        <div class="stars"></div>
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="brand">
+                    <div class="logo-wrap">
+                        <img src="{{ url_for('static', filename='images/astra-logo.png') }}" alt="Astra AI Logo" class="logo">
+                    </div>
+                    <div>
+                        <h1>Astra AI</h1>
+                        <p class="tagline">Created by Hooriya Muhammad Tahir</p>
+                    </div>
                 </div>
-                <div>
-                    <h1>Astra AI</h1>
-                    <p class="tagline">Created by Hooriya Muhammad Tahir</p>
+
+                <form action="/clear" method="POST">
+                    <button type="submit" class="clear-btn">Clear Chat</button>
+                </form>
+            </div>
+
+            <div class="chat-box" id="chat-box">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message-row {{ message.role }}">
+                            {% if message.role == "assistant" %}
+                                <div class="bubble assistant markdown-content">
+                                    {{ message.html | safe }}
+                                </div>
+                            {% else %}
+                                <div class="bubble user">{{ message.content }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="welcome-glow">✦ Welcome to Astra AI ✦</div>
+                        <p>Ask anything and explore the universe of ideas.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="typing-row" id="typing-row">
+                <div class="bubble assistant typing-bubble">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
 
-            <form action="/clear" method="POST">
-                <button type="submit" class="clear-btn">Clear Chat</button>
+            <form method="POST" class="input-form" id="chat-form">
+                <textarea name="question" id="question-input" placeholder="Message Astra AI..." required></textarea>
+                <button type="submit">Send</button>
             </form>
         </div>
-
-        <div class="chat-box" id="chat-box">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="message-row {{ message.role }}">
-                        {% if message.role == "assistant" %}
-                            <div class="bubble assistant markdown-content">
-                                {{ message.html | safe }}
-                            </div>
-                        {% else %}
-                            <div class="bubble user">{{ message.content }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="empty-state">
-                    <div class="welcome-glow">✦ Welcome to Astra AI ✦</div>
-                    <p>Ask anything and explore the universe of ideas.</p>
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="typing-row" id="typing-row">
-            <div class="bubble assistant typing-bubble">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-
-        <form method="POST" class="input-form" id="chat-form">
-            <textarea name="question" id="question-input" placeholder="Message Astra AI..." required></textarea>
-            <button type="submit">Send</button>
-        </form>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>

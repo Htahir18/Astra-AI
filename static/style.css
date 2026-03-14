@@ -22,18 +22,99 @@
 
 html, body {
     height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #000;
+    color: var(--text);
+}
+
+/* SPLASH SCREEN */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 1.6s ease, visibility 1.6s ease;
+}
+
+#splash-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: splashZoom 4s ease-in-out forwards;
+    filter: brightness(0.95) saturate(1.1);
+}
+
+.splash-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(8, 6, 19, 0.35),
+        rgba(0, 0, 0, 0.55)
+    );
+    text-align: center;
+    padding: 20px;
+}
+
+.splash-title {
+    font-size: 68px;
+    margin: 0;
+    color: #fff7e8;
+    text-shadow:
+        0 0 10px rgba(244, 213, 141, 0.6),
+        0 0 24px rgba(127, 210, 255, 0.35),
+        0 0 40px rgba(239, 140, 255, 0.25);
+    animation: titleGlow 2.6s ease-in-out infinite alternate;
+}
+
+.splash-subtitle {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #eee2ff;
+    letter-spacing: 0.5px;
+}
+
+/* MAIN APP TRANSITION */
+#main-app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    transition: opacity 1.4s ease;
+}
+
+.hidden-app {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.show-app {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: var(--text);
     background:
         radial-gradient(circle at top, rgba(127, 210, 255, 0.10), transparent 22%),
         radial-gradient(circle at 20% 80%, rgba(244, 213, 141, 0.10), transparent 20%),
         linear-gradient(180deg, var(--bg-1), var(--bg-2), var(--bg-3));
-    overflow: hidden;
-    position: relative;
 }
 
 /* animated background */
@@ -224,7 +305,6 @@ body {
     box-shadow: 0 0 18px rgba(244, 213, 141, 0.07);
 }
 
-/* markdown styling */
 .markdown-content p {
     margin: 0 0 10px 0;
 }
@@ -356,7 +436,26 @@ body {
         0 0 26px rgba(239, 140, 255, 0.24);
 }
 
-/* animations */
+@keyframes splashZoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes titleGlow {
+    0% {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+}
+
 @keyframes pulseGlow {
     0% {
         transform: scale(1);
