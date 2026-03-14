@@ -12,17 +12,28 @@ window.addEventListener("load", () => {
         }
     }
 
+    const splashSeen = sessionStorage.getItem("astraSplashSeen");
+
     if (splashScreen && mainApp) {
-        setTimeout(() => {
-            splashScreen.classList.add("fade-out");
-            mainApp.classList.remove("hidden-app");
-            mainApp.classList.add("show-app");
+        if (!splashSeen) {
+            sessionStorage.setItem("astraSplashSeen", "true");
 
             setTimeout(() => {
-                splashScreen.style.display = "none";
-                scrollToBottom();
-            }, 1600);
-        }, 2200);
+                splashScreen.classList.add("fade-out");
+                mainApp.classList.remove("hidden-app");
+                mainApp.classList.add("show-app");
+
+                setTimeout(() => {
+                    splashScreen.style.display = "none";
+                    scrollToBottom();
+                }, 1600);
+            }, 2200);
+        } else {
+            splashScreen.style.display = "none";
+            mainApp.classList.remove("hidden-app");
+            mainApp.classList.add("show-app");
+            scrollToBottom();
+        }
     }
 
     if (form && input && typingRow) {
@@ -34,10 +45,6 @@ window.addEventListener("load", () => {
             }
 
             typingRow.classList.add("show");
-
-            setTimeout(() => {
-                scrollToBottom();
-            }, 50);
         });
     }
 });
