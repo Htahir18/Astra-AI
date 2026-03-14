@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astra AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        (function () {
+            try {
+                if (sessionStorage.getItem("astraSplashSeen") === "true") {
+                    document.documentElement.classList.add("skip-splash");
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <div id="splash-screen">
@@ -15,7 +25,7 @@
         </div>
     </div>
 
-    <div id="main-app" class="hidden-app">
+    <div id="main-app">
         <div class="stars"></div>
         <div class="nebula nebula-1"></div>
         <div class="nebula nebula-2"></div>

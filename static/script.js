@@ -14,26 +14,22 @@ window.addEventListener("load", () => {
 
     const splashSeen = sessionStorage.getItem("astraSplashSeen");
 
-    if (splashScreen && mainApp) {
-        if (!splashSeen) {
-            sessionStorage.setItem("astraSplashSeen", "true");
+    if (!splashSeen && splashScreen) {
+        sessionStorage.setItem("astraSplashSeen", "true");
+
+        setTimeout(() => {
+            splashScreen.classList.add("fade-out");
 
             setTimeout(() => {
-                splashScreen.classList.add("fade-out");
-                mainApp.classList.remove("hidden-app");
-                mainApp.classList.add("show-app");
-
-                setTimeout(() => {
-                    splashScreen.style.display = "none";
-                    scrollToBottom();
-                }, 1600);
-            }, 2200);
-        } else {
+                splashScreen.style.display = "none";
+                scrollToBottom();
+            }, 1600);
+        }, 2200);
+    } else {
+        if (splashScreen) {
             splashScreen.style.display = "none";
-            mainApp.classList.remove("hidden-app");
-            mainApp.classList.add("show-app");
-            scrollToBottom();
         }
+        scrollToBottom();
     }
 
     if (form && input && typingRow) {
