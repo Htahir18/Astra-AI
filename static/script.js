@@ -1,24 +1,23 @@
-window.onload = function(){
+window.addEventListener("load", function () {
+    const splash = document.getElementById("splash");
+    const chat = document.getElementById("chat");
 
-const splash = document.getElementById("splash")
+    if (!splash) return;
 
-if(!sessionStorage.getItem("splashSeen")){
+    if (sessionStorage.getItem("splashSeen") === "true") {
+        splash.style.display = "none";
+    } else {
+        sessionStorage.setItem("splashSeen", "true");
 
-sessionStorage.setItem("splashSeen","true")
+        setTimeout(function () {
+            splash.style.opacity = "0";
 
-setTimeout(()=>{
-splash.style.opacity="0"
-
-setTimeout(()=>{
-splash.style.display="none"
-},1500)
-
-},2000)
-
-}else{
-
-splash.style.display="none"
-
-}
-
-}
+            setTimeout(function () {
+                splash.style.display = "none";
+                if (chat) {
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            }, 1500);
+        }, 2000);
+    }
+});

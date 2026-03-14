@@ -7,7 +7,7 @@ import re
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "astra-ai-secret-key-change-this")
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -56,9 +56,9 @@ def format_basic_markdown(text: str) -> str:
 
 
 def get_chat_history():
-    if "chat_history" not in session:
-        session["chat_history"] = []
-    return session["chat_history"]
+    if "astra_chat_v2" not in session:
+        session["astra_chat_v2"] = []
+    return session["astra_chat_v2"]
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -85,8 +85,7 @@ def home():
                                 "You were created by Hooriya Muhammad Tahir on 14 March 2026. "
                                 "If anyone asks about your name, creator, or origin, say that "
                                 "you are Astra AI created by Hooriya Muhammad Tahir on 14 March 2026. "
-                                "Format answers clearly using markdown when useful. "
-                                "Use short paragraphs and bullet points when helpful."
+                                "Format answers clearly using markdown when useful."
                             )
                         },
                         {
@@ -95,9 +94,7 @@ def home():
                         }
                     ]
                 )
-
                 answer = response.output_text.strip()
-
             except Exception as e:
                 answer = f"Error: {str(e)}"
 
@@ -106,7 +103,7 @@ def home():
                 "content": answer
             })
 
-            session["chat_history"] = chat_history
+            session["astra_chat_v2"] = chat_history
             session.modified = True
 
         return redirect(url_for("home"))
@@ -125,8 +122,8 @@ def home():
 
 @app.route("/clear", methods=["POST"])
 def clear_chat():
-    session["chat_history"] = []
-    session.modified = True
+    session.pop("astra_chat_v2", None)
+    session.clear()
     return redirect(url_for("home"))
 
 
