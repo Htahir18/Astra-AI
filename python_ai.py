@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -7,36 +7,23 @@ import re
 load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "astra-ai-secret-key-change-this")
+
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-chat_history = []
 
 
 def format_basic_markdown(text: str) -> str:
-    """
-    Very simple markdown-to-HTML formatter for:
-    - **bold**
-    - *italic*
-    - `inline code`
-    - line breaks
-    - bullet lines starting with - or *
-    """
     if not text:
         return ""
 
-    # Escape HTML first
     text = (
         text.replace("&", "&amp;")
         .replace("<", "&lt;")
         .replace(">", "&gt;")
     )
 
-    # Inline code
     text = re.sub(r"`([^`]+)`", r"<code>\1</code>", text)
-
-    # Bold
     text = re.sub(r"\*\*(.*?)\*\*", r"<strong>\1</strong>", text)
-
-    # Italic
     text = re.sub(r"\*(.*?)\*", r"<em>\1</em>", text)
 
     lines = text.split("\n")
@@ -68,12 +55,17 @@ def format_basic_markdown(text: str) -> str:
     return "".join(result)
 
 
+def get_chat_history():
+    if "chat_history" not in session:
+        session["chat_history"] = []
+    return session["chat_history"]
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
-    global chat_history
-
     if request.method == "POST":
         question = request.form.get("question", "").strip()
+        chat_history = get_chat_history()
 
         if question:
             chat_history.append({
@@ -111,14 +103,17 @@ def home():
 
             chat_history.append({
                 "role": "assistant",
-                "content": answer,
-                "html": format_basic_markdown(answer)
+                "content": answer
             })
+
+            session["chat_history"] = chat_history
+            session.modified = True
 
         return redirect(url_for("home"))
 
-    # make sure older assistant messages also get html
+    chat_history = get_chat_history()
     prepared_messages = []
+
     for message in chat_history:
         msg = dict(message)
         if msg["role"] == "assistant":
@@ -130,8 +125,8 @@ def home():
 
 @app.route("/clear", methods=["POST"])
 def clear_chat():
-    global chat_history
-    chat_history = []
+    session["chat_history"] = []
+    session.modified = True
     return redirect(url_for("home"))
 
 
